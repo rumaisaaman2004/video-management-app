@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables (only .env.example is committed)
+.env
+
+# OS / editor
+.DS_Store
+.vscode/
