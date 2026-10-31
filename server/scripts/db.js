@@ -1,10 +1,7 @@
-import { fileURLToPath } from 'node:url';
 import { env } from '../src/config/env.js';
 import { migrate, seed, dropSchema } from '../src/db/migrator.js';
+import { MIGRATIONS_DIR, SEEDS_DIR } from '../src/db/paths.js';
 import { pool } from '../src/db/pool.js';
-
-const MIGRATIONS_DIR = fileURLToPath(new URL('../db/migrations', import.meta.url));
-const SEEDS_DIR = fileURLToPath(new URL('../db/seeds', import.meta.url));
 
 function logList(label, names) {
   console.log(names.length > 0 ? `${label}:\n  ${names.join('\n  ')}` : `${label}: none`);
