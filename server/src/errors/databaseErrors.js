@@ -9,6 +9,10 @@ const PG_ERROR = Object.freeze({
   INVALID_TEXT_REPRESENTATION: '22P02',
 });
 
+export function isUniqueViolation(err) {
+  return err.code === PG_ERROR.UNIQUE_VIOLATION;
+}
+
 /**
  * Safety net for constraint violations the service layer did not anticipate.
  * Returns an AppError for known Postgres errors, or null for anything else.

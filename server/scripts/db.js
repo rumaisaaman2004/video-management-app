@@ -13,6 +13,10 @@ const commands = {
   },
 
   async seed() {
+    // Seeds include demo accounts with a published password.
+    if (env.NODE_ENV === 'production') {
+      throw new Error('Refusing to seed demo data in production');
+    }
     logList('Ran seeds', await seed(pool, SEEDS_DIR));
   },
 

@@ -9,12 +9,26 @@ dotenv.config({ path: fileURLToPath(new URL(`../../${envFile}`, import.meta.url)
 const DEFAULT_LOG_LEVEL = { development: 'debug', test: 'silent', production: 'info' };
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  // Required, never defaulted: a production server that forgot to set it would otherwise
+  // run in development mode (non-secure cookies, demo seeding allowed).
+  NODE_ENV: z.enum(['development', 'test', 'production']),
   PORT: z.coerce.number().int().positive().default(4000),
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
   DATABASE_POOL_MAX: z.coerce.number().int().positive().default(10),
   CORS_ORIGIN: z.url().default('http://localhost:5173'),
   LOG_LEVEL: z.enum(['silent', 'error', 'warn', 'info', 'debug']).optional(),
+  // Number of reverse proxies in front of the app (0 = none); needed for correct client IPs.
+  TRUST_PROXY: z.coerce.number().int().min(0).default(0),
+
+  JWT_SECRET: z.string().min(32, 'Must be at least 32 characters'),
+  JWT_ACCESS_TOKEN_TTL: z
+    .string()
+    .regex(/^\d+[smhd]$/, 'Must look like 15m, 1h or 1d')
+    .default('15m'),
+  REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().positive().default(7),
+  BCRYPT_ROUNDS: z.coerce.number().int().min(4).max(15).default(12),
+  // Login/register attempts allowed per IP address in each 15-minute window.
+  AUTH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(10),
 });
 
 const parsed = envSchema.safeParse(process.env);

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { runInTransaction } from './transaction.js';
+import { runInTransaction, withTransaction } from './transaction.js';
 
 // Fixed key for pg_advisory_lock so only one process can migrate at a time.
 const MIGRATION_LOCK_KEY = 4_820_241;
@@ -89,18 +89,14 @@ export async function migrate(pool, migrationsDir) {
  */
 export async function seed(pool, seedsDir) {
   const files = await loadSqlFiles(seedsDir);
-  const client = await pool.connect();
 
-  try {
-    await runInTransaction(client, async (tx) => {
-      for (const file of files) {
-        await tx.query(file.sql);
-      }
-    });
-    return files.map((file) => file.name);
-  } finally {
-    client.release();
-  }
+  await withTransaction(pool, async (tx) => {
+    for (const file of files) {
+      await tx.query(file.sql);
+    }
+  });
+
+  return files.map((file) => file.name);
 }
 
 /** Drops every table, function and trigger by recreating the public schema. */

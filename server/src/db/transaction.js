@@ -13,3 +13,16 @@ export async function runInTransaction(client, work) {
     throw err;
   }
 }
+
+/**
+ * Checks out a client from the pool, runs `work` in a transaction on it, and
+ * always returns the client to the pool.
+ */
+export async function withTransaction(pool, work) {
+  const client = await pool.connect();
+  try {
+    return await runInTransaction(client, work);
+  } finally {
+    client.release();
+  }
+}

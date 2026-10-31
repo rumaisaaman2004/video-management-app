@@ -7,7 +7,6 @@ dist/
 # Environment variables (only .env.example is committed)
 .env
 .env.test
-.env.example
 
 # OS / editor
 .DS_Store
