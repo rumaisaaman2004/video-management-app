@@ -6,12 +6,19 @@ import { logger } from './lib/logger.js';
 
 // Upper bound for in-flight requests to finish before the process is forced to exit.
 const SHUTDOWN_TIMEOUT_MS = 10_000;
+// Upper bound for receiving one request; large video uploads on slow connections need time.
+const REQUEST_TIMEOUT_MS = 30 * 60 * 1000;
 
-const app = createApp(createContainer({ pool }));
+const container = createContainer({ pool });
+const app = createApp(container);
 
-const server = app.listen(env.PORT, () => {
+const server = app.listen(env.PORT, async () => {
   logger.info(`API listening on http://localhost:${env.PORT} (${env.NODE_ENV})`);
+
+  const resumed = await container.videoProcessor.resumePending();
+  if (resumed > 0) logger.info(`Resumed processing of ${resumed} video(s)`);
 });
+server.requestTimeout = REQUEST_TIMEOUT_MS;
 
 let isShuttingDown = false;
 

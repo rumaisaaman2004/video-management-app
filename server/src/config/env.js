@@ -29,6 +29,14 @@ const envSchema = z.object({
   BCRYPT_ROUNDS: z.coerce.number().int().min(4).max(15).default(12),
   // Login/register attempts allowed per IP address in each 15-minute window.
   AUTH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(10),
+
+  // Where uploaded and processed media is stored; relative paths are resolved from server/.
+  STORAGE_DIR: z.string().min(1).default('uploads'),
+  MAX_UPLOAD_SIZE_MB: z.coerce.number().int().positive().default(500),
+  // FFmpeg is CPU-heavy; raise only on machines with spare cores.
+  VIDEO_PROCESSING_CONCURRENCY: z.coerce.number().int().min(1).max(8).default(1),
+  FFMPEG_PATH: z.string().min(1).default('ffmpeg'),
+  FFPROBE_PATH: z.string().min(1).default('ffprobe'),
 });
 
 const parsed = envSchema.safeParse(process.env);

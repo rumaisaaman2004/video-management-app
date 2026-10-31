@@ -13,6 +13,10 @@ export function isUniqueViolation(err) {
   return err.code === PG_ERROR.UNIQUE_VIOLATION;
 }
 
+export function isForeignKeyViolation(err) {
+  return err.code === PG_ERROR.FOREIGN_KEY_VIOLATION;
+}
+
 /**
  * Safety net for constraint violations the service layer did not anticipate.
  * Returns an AppError for known Postgres errors, or null for anything else.

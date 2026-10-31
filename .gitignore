@@ -11,3 +11,6 @@ dist/
 # OS / editor
 .DS_Store
 .vscode/
+
+# Uploaded and processed media (STORAGE_DIR)
+server/uploads/

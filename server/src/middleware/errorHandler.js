@@ -15,6 +15,13 @@ function toAppError(err) {
     return new AppError(413, 'PAYLOAD_TOO_LARGE', 'Request body is too large');
   }
 
+  // Raised by multer for file uploads that break its limits.
+  if (err.name === 'MulterError') {
+    return err.code === 'LIMIT_FILE_SIZE'
+      ? new AppError(413, 'PAYLOAD_TOO_LARGE', 'File is too large')
+      : AppError.badRequest(err.message);
+  }
+
   return new AppError(500, 'INTERNAL_ERROR', 'Something went wrong');
 }
 
