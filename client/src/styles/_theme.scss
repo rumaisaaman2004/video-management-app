@@ -1,0 +1,33 @@
+// Design tokens. These override Bootstrap's defaults, so every component
+// (buttons, forms, cards, badges...) picks up the same brand look.
+
+// Brand colors (all meet WCAG AA contrast for text on white).
+$primary: #4f46e5;
+$secondary: #64748b;
+$success: #15803d;
+$info: #0e7490;
+$warning: #b45309;
+$danger: #dc2626;
+
+// System fonts: fast to load and native-looking on every platform.
+$font-family-sans-serif:
+  system-ui,
+  -apple-system,
+  'Segoe UI',
+  Roboto,
+  'Helvetica Neue',
+  Arial,
+  sans-serif;
+$headings-font-weight: 600;
+
+// Softer, more modern corners than Bootstrap's defaults.
+$border-radius: 0.5rem;
+$border-radius-sm: 0.375rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 1rem;
+
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+$card-border-color: rgba(0, 0, 0, 0.08);
+$navbar-padding-y: 0.75rem;
