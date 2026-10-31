@@ -8,6 +8,11 @@ export function isPubliclyWatchable(video) {
   return video.status === 'ready' && video.visibility === 'public';
 }
 
+/** Thumbnail URL for a video known to be publicly watchable (e.g. a playlist cover). */
+export function publicThumbnailUrl(videoId, thumbnailCreatedAt) {
+  return `/api/videos/${videoId}/thumbnail?v=${thumbnailCreatedAt.getTime()}`;
+}
+
 /** Public media gets plain, cacheable URLs; restricted media gets expiring signed URLs. */
 function mediaUrl(video, path) {
   return isPubliclyWatchable(video) ? path : signPath(path, SIGNED_URL_TTL_SECONDS);

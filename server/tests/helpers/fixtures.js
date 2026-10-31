@@ -36,13 +36,15 @@ export async function createVideo(pool, { uploaderId, ...overrides }) {
     status: 'ready',
     visibility: 'public',
     viewCount: 0,
+    durationSeconds: 100,
     createdAt: new Date(),
     ...overrides,
   };
   const { rows } = await pool.query(
     `INSERT INTO videos
-       (uploader_id, category_id, title, description, status, visibility, view_count, created_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       (uploader_id, category_id, title, description, status, visibility, view_count,
+        duration_seconds, created_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
      RETURNING id, category_id AS "categoryId"`,
     [
       uploaderId,
@@ -52,6 +54,7 @@ export async function createVideo(pool, { uploaderId, ...overrides }) {
       video.status,
       video.visibility,
       video.viewCount,
+      video.durationSeconds,
       video.createdAt,
     ],
   );

@@ -1,9 +1,10 @@
 import { buildSetClause } from '../../db/sql.js';
 
-// One row per video with its category, uploader, thumbnail version and tag names.
+// One row per video with its category, uploader, thumbnail version, likes and tag names.
 const SELECT_VIDEOS = `
   SELECT v.id, v.title, v.description, v.status, v.visibility,
          v.duration_seconds AS "durationSeconds", v.view_count AS "viewCount",
+         (SELECT count(*) FROM likes l WHERE l.video_id = v.id) AS "likeCount",
          v.created_at AS "createdAt", v.updated_at AS "updatedAt",
          c.id AS "categoryId", c.name AS "categoryName", c.slug AS "categorySlug",
          u.id AS "uploaderId", u.name AS "uploaderName",
@@ -104,6 +105,12 @@ export function createVideosRepository(db) {
     async findById(id) {
       const { rows } = await db.query(`${SELECT_VIDEOS} WHERE v.id = $1`, [id]);
       return rows[0] ? toVideo(rows[0]) : null;
+    },
+
+    /** Returns the videos with the given IDs, in no particular order. */
+    async findByIds(ids) {
+      const { rows } = await db.query(`${SELECT_VIDEOS} WHERE v.id = ANY($1::uuid[])`, [ids]);
+      return rows.map(toVideo);
     },
 
     /** Returns the new video's ID. */

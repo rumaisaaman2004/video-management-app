@@ -44,6 +44,11 @@ export const paginationSchema = z.object({
   ),
 });
 
+/** LIMIT/OFFSET values for a validated page request. */
+export function pageWindow({ page, pageSize }) {
+  return { limit: pageSize, offset: (page - 1) * pageSize };
+}
+
 /** Builds the `meta` block returned alongside a page of results. */
 export function paginationMeta({ page, pageSize }, total) {
   return { page, pageSize, total, totalPages: Math.ceil(total / pageSize) };

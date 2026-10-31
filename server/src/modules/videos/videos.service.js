@@ -3,8 +3,9 @@ import path from 'node:path';
 import { withTransaction } from '../../db/transaction.js';
 import { AppError } from '../../errors/AppError.js';
 import { isForeignKeyViolation } from '../../errors/databaseErrors.js';
-import { paginationMeta } from '../../lib/commonSchemas.js';
+import { pageWindow, paginationMeta } from '../../lib/commonSchemas.js';
 import { extractThumbnail } from '../../lib/ffmpeg.js';
+import { createEngagementRepository } from '../engagement/engagement.repository.js';
 import { createTagsRepository } from '../tags/tags.repository.js';
 import {
   detectImageFileType,
@@ -40,6 +41,21 @@ function rethrowAsCategoryError(err) {
 export function createVideosService({ pool, storage, videoProcessor }) {
   const videos = createVideosRepository(pool);
   const assets = createVideoAssetsRepository(pool);
+  const engagement = createEngagementRepository(pool);
+
+  /**
+   * Adds `viewer: { liked, bookmarked, progressSeconds, completed }` to each video
+   * for signed-in viewers, using one query for the whole list.
+   */
+  async function withViewerState(presentedVideos, viewer) {
+    if (!viewer?.id || presentedVideos.length === 0) return presentedVideos;
+
+    const states = await engagement.findViewerStates(
+      viewer.id,
+      presentedVideos.map((video) => video.id),
+    );
+    return presentedVideos.map((video) => ({ ...video, viewer: states.get(video.id) }));
+  }
 
   /** Loads a video the viewer may see. Hidden videos get 404 so their existence is not revealed. */
   async function findViewable(id, viewer) {
@@ -52,7 +68,11 @@ export function createVideosService({ pool, storage, videoProcessor }) {
 
   async function getById(id, viewer) {
     const video = await findViewable(id, viewer);
-    return presentVideo(video, await assets.findRenditions(id));
+    const [presented] = await withViewerState(
+      [presentVideo(video, await assets.findRenditions(id))],
+      viewer,
+    );
+    return presented;
   }
 
   async function findReady(id) {
@@ -99,6 +119,25 @@ export function createVideosService({ pool, storage, videoProcessor }) {
 
   return {
     getById,
+    findViewable,
+
+    /**
+     * Video cards for the given IDs, in the same order, leaving out videos the
+     * viewer may not see. Shared by bookmarks, history and playlists.
+     */
+    async getCards(videoIds, viewer) {
+      if (videoIds.length === 0) return [];
+
+      const videosById = new Map((await videos.findByIds(videoIds)).map((v) => [v.id, v]));
+      const visible = videoIds
+        .map((id) => videosById.get(id))
+        .filter((video) => video && (isAdmin(viewer) || isPubliclyWatchable(video)));
+
+      return withViewerState(
+        visible.map((video) => presentVideo(video)),
+        viewer,
+      );
+    },
 
     /** One page of the library. Non-admins only ever see ready, public videos. */
     async list(query, viewer) {
@@ -116,12 +155,14 @@ export function createVideosService({ pool, storage, videoProcessor }) {
       const { videos: page, total } = await videos.findPage({
         filters,
         sort,
-        limit: query.pageSize,
-        offset: (query.page - 1) * query.pageSize,
+        ...pageWindow(query),
       });
 
       return {
-        data: page.map((video) => presentVideo(video)),
+        data: await withViewerState(
+          page.map((video) => presentVideo(video)),
+          viewer,
+        ),
         meta: paginationMeta(query, total),
       };
     },
