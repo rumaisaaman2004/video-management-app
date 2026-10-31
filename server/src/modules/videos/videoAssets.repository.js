@@ -14,20 +14,35 @@ export function createVideoAssetsRepository(db) {
       );
     },
 
-    async findByVideoId(videoId) {
-      const { rows } = await db.query(
-        `SELECT ${ASSET_COLUMNS} FROM video_assets WHERE video_id = $1 ORDER BY kind, height`,
-        [videoId],
-      );
-      return rows;
-    },
-
     async findSource(videoId) {
       const { rows } = await db.query(
         `SELECT ${ASSET_COLUMNS} FROM video_assets WHERE video_id = $1 AND kind = 'source'`,
         [videoId],
       );
       return rows[0] ?? null;
+    },
+
+    async findOne(videoId, kind, label) {
+      const { rows } = await db.query(
+        `SELECT ${ASSET_COLUMNS} FROM video_assets
+         WHERE video_id = $1 AND kind = $2 AND label = $3`,
+        [videoId, kind, label],
+      );
+      return rows[0] ?? null;
+    },
+
+    async findRenditions(videoId) {
+      const { rows } = await db.query(
+        `SELECT ${ASSET_COLUMNS} FROM video_assets
+         WHERE video_id = $1 AND kind = 'rendition'
+         ORDER BY height`,
+        [videoId],
+      );
+      return rows;
+    },
+
+    async deleteByKind(videoId, kind) {
+      await db.query('DELETE FROM video_assets WHERE video_id = $1 AND kind = $2', [videoId, kind]);
     },
 
     /** Removes thumbnail and rendition rows so processing can be re-run cleanly. */

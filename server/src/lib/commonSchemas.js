@@ -23,3 +23,28 @@ export function optionalTextSchema(maxLength) {
     .optional()
     .transform((value) => (value === '' ? null : value));
 }
+
+/** Query strings and form fields send empty values as ""; treat them as "not provided". */
+export function emptyToUndefined(value) {
+  return value === '' ? undefined : value;
+}
+
+/** Wraps an optional query parameter schema so `?name=` counts as absent. */
+export function optionalParam(schema) {
+  return z.preprocess(emptyToUndefined, schema.optional());
+}
+
+export const MAX_PAGE_SIZE = 50;
+
+export const paginationSchema = z.object({
+  page: z.preprocess(emptyToUndefined, z.coerce.number().int().min(1).default(1)),
+  pageSize: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().int().min(1).max(MAX_PAGE_SIZE).default(12),
+  ),
+});
+
+/** Builds the `meta` block returned alongside a page of results. */
+export function paginationMeta({ page, pageSize }, total) {
+  return { page, pageSize, total, totalPages: Math.ceil(total / pageSize) };
+}

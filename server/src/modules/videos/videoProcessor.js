@@ -5,10 +5,10 @@ import { extractThumbnail, probe, transcodeToMp4 } from '../../lib/ffmpeg.js';
 import { logger } from '../../lib/logger.js';
 import { planRenditions } from './renditions.js';
 import { videoStorageKeys } from './storageKeys.js';
+import { THUMBNAIL_WIDTH } from './thumbnails.js';
 import { createVideoAssetsRepository } from './videoAssets.repository.js';
 import { createVideosRepository } from './videos.repository.js';
 
-const THUMBNAIL_WIDTH = 640;
 // Grab the thumbnail early in the video, but past any fade-in.
 const THUMBNAIL_POSITION = { fraction: 0.1, maxSeconds: 5 };
 

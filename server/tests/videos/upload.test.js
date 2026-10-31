@@ -149,7 +149,11 @@ describe('POST /api/videos', () => {
       await videoProcessor.whenIdle();
 
       expect(res.status).toBe(202);
-      expect(res.body.data.categoryId).toBe(category.id);
+      expect(res.body.data.category).toEqual({
+        id: category.id,
+        name: category.name,
+        slug: category.slug,
+      });
     });
   });
 

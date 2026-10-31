@@ -31,16 +31,40 @@ export async function createCategory(pool, overrides = {}) {
 export async function createVideo(pool, { uploaderId, ...overrides }) {
   const video = {
     title: 'Test Video',
+    description: null,
     categoryId: null,
     status: 'ready',
     visibility: 'public',
+    viewCount: 0,
+    createdAt: new Date(),
     ...overrides,
   };
   const { rows } = await pool.query(
-    `INSERT INTO videos (uploader_id, category_id, title, status, visibility)
-     VALUES ($1, $2, $3, $4, $5)
+    `INSERT INTO videos
+       (uploader_id, category_id, title, description, status, visibility, view_count, created_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
      RETURNING id, category_id AS "categoryId"`,
-    [uploaderId, video.categoryId, video.title, video.status, video.visibility],
+    [
+      uploaderId,
+      video.categoryId,
+      video.title,
+      video.description,
+      video.status,
+      video.visibility,
+      video.viewCount,
+      video.createdAt,
+    ],
   );
   return rows[0];
+}
+
+export async function tagVideo(pool, videoId, names) {
+  await pool.query(
+    'INSERT INTO tags (name) SELECT unnest($1::text[]) ON CONFLICT (name) DO NOTHING',
+    [names],
+  );
+  await pool.query(
+    'INSERT INTO video_tags (video_id, tag_id) SELECT $1, id FROM tags WHERE name = ANY($2)',
+    [videoId, names],
+  );
 }

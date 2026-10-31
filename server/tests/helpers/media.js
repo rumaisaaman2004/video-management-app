@@ -43,6 +43,43 @@ export async function createSampleVideo({ name, width, height, withAudio = true 
   return outputPath;
 }
 
+/** Generates a solid-color image in the given format (png, jpg, ...). */
+export async function createSampleImage({ name, width, height }) {
+  await mkdir(SAMPLES_DIR, { recursive: true });
+  const outputPath = path.join(SAMPLES_DIR, name);
+  await execFileAsync(env.FFMPEG_PATH, [
+    '-hide_banner',
+    '-loglevel',
+    'error',
+    '-f',
+    'lavfi',
+    '-i',
+    `color=c=orange:s=${width}x${height}`,
+    '-frames:v',
+    '1',
+    '-y',
+    outputPath,
+  ]);
+  return outputPath;
+}
+
+/** Reads the codec and dimensions of a media file. */
+export async function probeDimensions(filePath) {
+  const { stdout } = await execFileAsync(env.FFPROBE_PATH, [
+    '-v',
+    'error',
+    '-select_streams',
+    'v:0',
+    '-show_entries',
+    'stream=codec_name,width,height',
+    '-of',
+    'json',
+    filePath,
+  ]);
+  const [stream] = JSON.parse(stdout).streams;
+  return { codec: stream.codec_name, width: stream.width, height: stream.height };
+}
+
 /** Writes an arbitrary file into the samples folder, e.g. a fake or oversized "video". */
 export async function createSampleFile(name, contents) {
   await mkdir(SAMPLES_DIR, { recursive: true });
