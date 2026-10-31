@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import { ToastProvider } from '../components/ui/ToastProvider.jsx';
+import { AuthProvider } from '../features/auth/AuthProvider.jsx';
 import { routes } from './routes.jsx';
 
 const router = createBrowserRouter(routes);
@@ -8,7 +9,9 @@ const router = createBrowserRouter(routes);
 export function App() {
   return (
     <ToastProvider>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ToastProvider>
   );
 }

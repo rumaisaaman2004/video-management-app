@@ -229,15 +229,18 @@ describe('POST /api/videos', () => {
   });
 
   describe('access control', () => {
+    // The server answers before reading the upload and closes the connection. A tiny file
+    // is fully sent before that, so the client never fails mid-write (EPIPE); the contents
+    // do not matter because access is refused first.
     it('rejects anonymous visitors before reading the file', async () => {
-      const res = await upload(samples.landscape, { title: 'Hooks' }, null);
+      const res = await upload(samples.fakeVideo, { title: 'Hooks' }, null);
 
       expect(res.status).toBe(401);
       expect(await leftoverTempFiles()).toEqual([]);
     });
 
     it('rejects non-admin users before reading the file', async () => {
-      const res = await upload(samples.landscape, { title: 'Hooks' }, bearerToken('user'));
+      const res = await upload(samples.fakeVideo, { title: 'Hooks' }, bearerToken('user'));
 
       expect(res.status).toBe(403);
       expect(await leftoverTempFiles()).toEqual([]);

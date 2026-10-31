@@ -2,14 +2,21 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link, NavLink } from 'react-router';
+import { useAuth } from '../../features/auth/authContext.js';
 import { APP_NAME } from '../../hooks/useDocumentTitle.js';
 import { ColorModeToggle } from './ColorModeToggle.jsx';
+import { UserMenu } from './UserMenu.jsx';
 
-// Signed-in and admin links are added together with authentication.
+// `requiresAuth` / `adminOnly` hide links the visitor cannot use.
 const NAV_LINKS = [{ to: '/', label: 'Library', icon: 'collection-play' }];
 
 /** Top navigation; collapses into a menu button on small screens. */
 export function AppNavbar() {
+  const { isAuthenticated, isAdmin } = useAuth();
+  const visibleLinks = NAV_LINKS.filter(
+    (link) => (!link.requiresAuth || isAuthenticated) && (!link.adminOnly || isAdmin),
+  );
+
   return (
     <Navbar expand="lg" sticky="top" collapseOnSelect className="bg-body border-bottom">
       <Container>
@@ -20,7 +27,7 @@ export function AppNavbar() {
         <Navbar.Toggle aria-controls="main-navigation" />
         <Navbar.Collapse id="main-navigation">
           <Nav className="me-auto" as="ul">
-            {NAV_LINKS.map((link) => (
+            {visibleLinks.map((link) => (
               <Nav.Item as="li" key={link.to}>
                 <Nav.Link as={NavLink} to={link.to} eventKey={link.to} end>
                   <i className={`bi bi-${link.icon} me-1`} aria-hidden="true" />
@@ -29,9 +36,10 @@ export function AppNavbar() {
               </Nav.Item>
             ))}
           </Nav>
-          <div className="d-flex align-items-center gap-2 py-2 py-lg-0">
+          <Nav className="d-flex flex-row align-items-center gap-2 py-2 py-lg-0">
             <ColorModeToggle />
-          </div>
+            <UserMenu />
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
