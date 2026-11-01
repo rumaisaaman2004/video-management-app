@@ -14,15 +14,48 @@ export function makeUser(overrides = {}) {
   };
 }
 
+/** A video card as the API returns it. */
+export function makeVideo(overrides = {}) {
+  return {
+    id: 'video-1',
+    title: 'React Hooks in Depth',
+    description: null,
+    status: 'ready',
+    visibility: 'public',
+    durationSeconds: 125,
+    viewCount: 42,
+    likeCount: 3,
+    createdAt: '2026-10-01T10:00:00.000Z',
+    updatedAt: '2026-10-01T10:00:00.000Z',
+    category: { id: 'cat-1', name: 'Web Development', slug: 'web-development' },
+    uploader: { id: 'admin-1', name: 'Demo Admin' },
+    tags: ['react'],
+    thumbnailUrl: '/api/videos/video-1/thumbnail?v=1',
+    ...overrides,
+  };
+}
+
 /** The API's error format: `{ error: { code, message, details? } }`. */
 export function apiError(status, code, message, details) {
   return HttpResponse.json({ error: { code, message, details } }, { status });
 }
 
-// Default: nobody is signed in. Tests override handlers with server.use(...).
+/** A page of results in the API's list format. */
+export function pageOf(items, { page = 1, pageSize = 12, total = items.length } = {}) {
+  return HttpResponse.json({
+    data: items,
+    meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+  });
+}
+
+// Defaults: nobody is signed in and the library is empty.
+// Tests override handlers with server.use(...).
 const defaultHandlers = [
   http.post('/api/auth/refresh', () => apiError(401, 'UNAUTHORIZED', 'No active session')),
   http.post('/api/auth/logout', () => new HttpResponse(null, { status: 204 })),
+  http.get('/api/videos', () => pageOf([])),
+  http.get('/api/categories', () => HttpResponse.json({ data: [] })),
+  http.get('/api/tags', () => HttpResponse.json({ data: [] })),
 ];
 
 /** Fake API for tests: requests never reach the real server. */

@@ -3,7 +3,7 @@ import { AccountPage } from '../features/auth/AccountPage.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { RegisterPage } from '../features/auth/RegisterPage.jsx';
 import { RequireAuth } from '../features/auth/RouteGuards.jsx';
-import { HomePage } from '../pages/HomePage.jsx';
+import { LibraryPage } from '../features/videos/LibraryPage.jsx';
 import { NotFoundPage } from '../pages/NotFoundPage.jsx';
 import { RouteErrorPage } from '../pages/RouteErrorPage.jsx';
 
@@ -13,7 +13,7 @@ export const routes = [
     element: <AppLayout />,
     errorElement: <RouteErrorPage />,
     children: [
-      { index: true, element: <HomePage /> },
+      { index: true, element: <LibraryPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
 
