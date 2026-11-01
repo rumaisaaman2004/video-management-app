@@ -1,0 +1,30 @@
+{
+  "name": "video-management-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Upload, organize and watch educational videos",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently --names server,client --prefix-colors blue,green \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:api": "newman run postman/video-management-app.postman_collection.json --environment postman/local.postman_environment.json",
+    "test:coverage": "npm run test:coverage --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6",
+    "newman": "6.2.3",
+    "prettier": "^3.9.10"
+  },
+  "overrides": {
+    "video.js": "8.24.1"
+  }
+}

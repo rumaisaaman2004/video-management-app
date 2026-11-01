@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build output and test coverage reports
+dist/
+coverage/
+
+# Environment variables (only .env.example is committed)
+.env
+.env.test
+
+# OS / editor
+.DS_Store
+.vscode/
+
+# Uploaded and processed media (STORAGE_DIR)
+server/uploads/

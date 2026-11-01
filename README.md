@@ -6,13 +6,13 @@ and resume playback where they left off.
 
 ## Tech Stack
 
-| Layer      | Technology                                                  |
-| ---------- | ----------------------------------------------------------- |
-| Frontend   | React 18 (Vite), React Router, CSS3 (CSS Modules), Video.js |
-| Backend    | Node.js, Express, Multer, Zod                               |
-| Database   | PostgreSQL 16 (`pg` driver, plain SQL migrations)           |
-| Media      | FFmpeg / FFprobe (thumbnails and metadata)                  |
-| Testing    | Vitest, React Testing Library, Supertest, Postman           |
+| Layer    | Technology                                                                   |
+| -------- | ---------------------------------------------------------------------------- |
+| Frontend | React 19 (Vite), React Router, Bootstrap 5 + React-Bootstrap, Sass, Video.js |
+| Backend  | Node.js, Express 5, Multer, Zod                                              |
+| Database | PostgreSQL 16 (`pg` driver, plain SQL migrations)                            |
+| Media    | FFmpeg / FFprobe (thumbnails and metadata)                                   |
+| Testing  | Vitest, React Testing Library, Supertest, Postman                            |
 
 ## Prerequisites
 
