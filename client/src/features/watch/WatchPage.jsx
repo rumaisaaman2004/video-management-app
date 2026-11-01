@@ -10,6 +10,7 @@ import { useApi } from '../../hooks/useApi.js';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle.js';
 import { formatDuration, formatRelativeDate, pluralize } from '../../lib/format.js';
 import { useAuth } from '../auth/authContext.js';
+import { SaveToPlaylistButton } from '../playlists/SaveToPlaylistButton.jsx';
 import { resumePosition } from './playback.js';
 import { UpNext } from './UpNext.jsx';
 import { VideoActions } from './VideoActions.jsx';
@@ -71,7 +72,10 @@ function VideoDetails({ video }) {
           </div>
         </div>
 
-        <VideoActions video={video} />
+        <div className="d-flex flex-wrap gap-2">
+          <VideoActions video={video} />
+          <SaveToPlaylistButton video={video} />
+        </div>
 
         {video.description && (
           <p className="mb-0" style={{ whiteSpace: 'pre-line' }}>

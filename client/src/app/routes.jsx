@@ -7,6 +7,10 @@ import { AccountPage } from '../features/auth/AccountPage.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { RegisterPage } from '../features/auth/RegisterPage.jsx';
 import { RequireAdmin, RequireAuth } from '../features/auth/RouteGuards.jsx';
+import { FavouritesPage } from '../features/me/FavouritesPage.jsx';
+import { HistoryPage } from '../features/me/HistoryPage.jsx';
+import { MyPlaylistsPage } from '../features/playlists/MyPlaylistsPage.jsx';
+import { PlaylistPage } from '../features/playlists/PlaylistPage.jsx';
 import { LibraryPage } from '../features/videos/LibraryPage.jsx';
 import { NotFoundPage } from '../pages/NotFoundPage.jsx';
 import { RouteErrorPage } from '../pages/RouteErrorPage.jsx';
@@ -29,12 +33,17 @@ export const routes = [
       },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
+      // Public playlists can be opened by anyone; the page itself hides private ones.
+      { path: 'playlists/:id', element: <PlaylistPage /> },
 
       // Signed-in users only.
       {
         element: <RequireAuth />,
         children: [
           { path: 'account', element: <AccountPage /> },
+          { path: 'favourites', element: <FavouritesPage /> },
+          { path: 'history', element: <HistoryPage /> },
+          { path: 'playlists', element: <MyPlaylistsPage /> },
 
           // Admins only.
           {

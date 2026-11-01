@@ -9,7 +9,10 @@ import { UserMenu } from './UserMenu.jsx';
 
 // `requiresAuth` / `adminOnly` hide links the visitor cannot use.
 const NAV_LINKS = [
-  { to: '/', label: 'Library', icon: 'collection-play' },
+  { to: '/', label: 'Library', icon: 'grid-3x2-gap' },
+  { to: '/playlists', label: 'Playlists', icon: 'collection-play', requiresAuth: true },
+  { to: '/favourites', label: 'Favourites', icon: 'bookmark', requiresAuth: true },
+  { to: '/history', label: 'History', icon: 'clock-history', requiresAuth: true },
   { to: '/admin/videos', label: 'Manage videos', icon: 'sliders', adminOnly: true },
 ];
 

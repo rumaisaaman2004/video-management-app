@@ -6,6 +6,8 @@ import { PageHeader } from '../../components/ui/PageHeader.jsx';
 import { VideoGrid } from '../../components/ui/VideoGrid.jsx';
 import { useApi } from '../../hooks/useApi.js';
 import { pluralize } from '../../lib/format.js';
+import { useAuth } from '../auth/authContext.js';
+import { ContinueWatching } from '../me/ContinueWatching.jsx';
 import { LibraryFilters } from './LibraryFilters.jsx';
 import { listCategories, listLibraryVideos, listTags } from './libraryApi.js';
 import { useLibraryParams } from './useLibraryParams.js';
@@ -18,6 +20,7 @@ function resultSummary(meta, params) {
 }
 
 export function LibraryPage() {
+  const { isAuthenticated } = useAuth();
   const { params, sortOptions, hasFilters, update, clearFilters } = useLibraryParams();
   const { q, category, tag, sort, page } = params;
 
@@ -79,6 +82,8 @@ export function LibraryPage() {
   return (
     <>
       <PageHeader title="Video library" subtitle="Browse and watch educational videos." />
+      {/* Only on the plain first page, so it never pushes search results down. */}
+      {isAuthenticated && !hasFilters && page === 1 && <ContinueWatching />}
       <LibraryFilters
         params={params}
         sortOptions={sortOptions}

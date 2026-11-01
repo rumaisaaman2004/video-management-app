@@ -35,6 +35,22 @@ export function makeVideo(overrides = {}) {
   };
 }
 
+/** A playlist as the API returns it (`videos` only on the detail endpoint). */
+export function makePlaylist(overrides = {}) {
+  return {
+    id: 'playlist-1',
+    title: 'Frontend course',
+    description: null,
+    visibility: 'private',
+    videoCount: 0,
+    coverThumbnailUrl: null,
+    owner: { id: 'user-1', name: 'Ana Lima' },
+    createdAt: '2026-10-01T10:00:00.000Z',
+    updatedAt: '2026-10-01T10:00:00.000Z',
+    ...overrides,
+  };
+}
+
 /** The API's error format: `{ error: { code, message, details? } }`. */
 export function apiError(status, code, message, details) {
   return HttpResponse.json({ error: { code, message, details } }, { status });
@@ -48,7 +64,7 @@ export function pageOf(items, { page = 1, pageSize = 12, total = items.length } 
   });
 }
 
-// Defaults: nobody is signed in and the library is empty.
+// Defaults: nobody is signed in, and the library and personal lists are empty.
 // Tests override handlers with server.use(...).
 const defaultHandlers = [
   http.post('/api/auth/refresh', () => apiError(401, 'UNAUTHORIZED', 'No active session')),
@@ -56,6 +72,9 @@ const defaultHandlers = [
   http.get('/api/videos', () => pageOf([])),
   http.get('/api/categories', () => HttpResponse.json({ data: [] })),
   http.get('/api/tags', () => HttpResponse.json({ data: [] })),
+  http.get('/api/me/history', () => pageOf([])),
+  http.get('/api/me/bookmarks', () => pageOf([])),
+  http.get('/api/me/playlists', () => HttpResponse.json({ data: [] })),
 ];
 
 /** Fake API for tests: requests never reach the real server. */
