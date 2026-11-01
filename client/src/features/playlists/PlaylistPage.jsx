@@ -211,6 +211,7 @@ function PlaylistContent({ playlistId }) {
     return (
       <EmptyState
         icon="collection-play"
+        titleAs="h1"
         title="Playlist not found"
         message="It may have been deleted, or it is private."
         action={

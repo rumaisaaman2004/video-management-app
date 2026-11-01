@@ -86,6 +86,7 @@ export function EditVideoPage() {
     return (
       <EmptyState
         icon="film"
+        titleAs="h1"
         title="Video not found"
         message="It may have been deleted."
         action={

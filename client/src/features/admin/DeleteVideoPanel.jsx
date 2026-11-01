@@ -31,7 +31,7 @@ export function DeleteVideoPanel({ video }) {
   return (
     <Card border="danger">
       <Card.Body className="d-grid gap-2">
-        <h2 className="h5 mb-0 text-danger">Delete video</h2>
+        <h2 className="h5 mb-0 text-danger-emphasis">Delete video</h2>
         <p className="small mb-0">
           Removes the video, its files and everyone’s likes, favourites and history for it.
         </p>

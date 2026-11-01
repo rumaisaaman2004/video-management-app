@@ -81,7 +81,7 @@ export function VideoCard({ video, actions }) {
         </span>
 
         {video.viewer?.completed && (
-          <span className="small text-success">
+          <span className="small text-success-emphasis">
             <i className="bi bi-check-circle-fill me-1" aria-hidden="true" />
             Watched
           </span>

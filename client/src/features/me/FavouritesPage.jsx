@@ -38,6 +38,7 @@ export function FavouritesPage() {
       />
       <PersonalVideoList
         videos={favourites}
+        heading="Saved videos"
         page={page}
         onPageChange={(nextPage) => update({ page: nextPage })}
         renderActions={(video) => (

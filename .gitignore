@@ -1,8 +1,9 @@
 # Dependencies
 node_modules/
 
-# Build output
+# Build output and test coverage reports
 dist/
+coverage/
 
 # Environment variables (only .env.example is committed)
 .env

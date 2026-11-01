@@ -54,7 +54,7 @@ export function RegisterPage() {
       footer={
         <>
           Already have an account?{' '}
-          <Link to="/login" state={location.state}>
+          <Link to="/login" state={location.state} className="text-decoration-underline">
             Sign in
           </Link>
         </>

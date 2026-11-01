@@ -33,7 +33,17 @@ const titlesInOrder = () =>
 describe('my playlists page', () => {
   beforeEach(() => signInAs());
 
-  it('creates a playlist after checking its title, then opens it', async () => {
+  it('requires a title before creating a playlist', async () => {
+    renderApp('/playlists');
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Create a playlist' }));
+    const dialog = screen.getByRole('dialog', { name: 'New playlist' });
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Create playlist' }));
+
+    expect(within(dialog).getByLabelText(/Title/)).toHaveAccessibleDescription('Title is required');
+  });
+
+  it('creates a playlist with a trimmed title, then opens it', async () => {
     let body;
     server.use(
       http.post('/api/playlists', async ({ request }) => {
@@ -49,10 +59,9 @@ describe('my playlists page', () => {
 
     await userEvent.click(await screen.findByRole('button', { name: 'Create a playlist' }));
     const dialog = screen.getByRole('dialog', { name: 'New playlist' });
-    await userEvent.click(within(dialog).getByRole('button', { name: 'Create playlist' }));
-    expect(within(dialog).getByLabelText(/Title/)).toHaveAccessibleDescription('Title is required');
-
-    await userEvent.type(within(dialog).getByLabelText(/Title/), '  Weekend learning ');
+    // paste() enters the text in one step; typing it key by key adds nothing to this test.
+    await userEvent.click(within(dialog).getByLabelText(/Title/));
+    await userEvent.paste('  Weekend learning ');
     await userEvent.click(within(dialog).getByRole('button', { name: 'Create playlist' }));
 
     expect(

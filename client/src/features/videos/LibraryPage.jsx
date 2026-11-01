@@ -91,6 +91,8 @@ export function LibraryPage() {
         tags={tags.data ?? []}
         onChange={update}
       />
+      {/* Card titles are h3; this keeps the heading outline complete for screen readers. */}
+      <h2 className="visually-hidden">Videos</h2>
       <p className="small text-body-secondary mb-3" aria-live="polite">
         {resultSummary(result?.meta, params)}
       </p>

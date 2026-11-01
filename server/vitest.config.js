@@ -26,5 +26,10 @@ export default defineConfig({
     fileParallelism: false,
     // Video tests run real FFmpeg encodes.
     testTimeout: 30_000,
+    coverage: {
+      provider: 'v8',
+      include: ['src/**'],
+      reporter: ['text-summary', 'html'],
+    },
   },
 });

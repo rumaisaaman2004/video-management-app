@@ -47,3 +47,14 @@ body {
   outline: 3px solid rgba($primary, 0.5);
   outline-offset: 2px;
 }
+
+// Bootstrap's outline buttons keep the brand colors in dark mode, where they are too dark to
+// read on the dark background (WCAG AA needs 4.5:1). Use the lighter "text emphasis" shade there.
+@include color-mode(dark) {
+  @each $color in (primary, secondary, success, info, warning, danger) {
+    .btn-outline-#{$color} {
+      --bs-btn-color: var(--bs-#{$color}-text-emphasis);
+      --bs-btn-border-color: var(--bs-#{$color}-text-emphasis);
+    }
+  }
+}

@@ -9,6 +9,7 @@ export function RouteErrorPage() {
 
   return (
     <div className="container py-5">
+      <h1 className="h4">Something went wrong</h1>
       <ErrorState
         message="Sorry, this page ran into a problem."
         onRetry={() => window.location.reload()}

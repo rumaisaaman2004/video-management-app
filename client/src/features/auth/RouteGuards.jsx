@@ -21,6 +21,7 @@ export function RequireAdmin() {
     return (
       <EmptyState
         icon="shield-lock"
+        titleAs="h1"
         title="Admins only"
         message="You need an administrator account to open this page."
         action={

@@ -44,13 +44,17 @@ export function MyPlaylistsPage() {
       );
     }
     return (
-      <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
-        {playlists.data.map((playlist) => (
-          <Col key={playlist.id}>
-            <PlaylistCard playlist={playlist} />
-          </Col>
-        ))}
-      </Row>
+      <>
+        {/* Playlist card titles are h3; this keeps the heading outline complete. */}
+        <h2 className="visually-hidden">Your playlists</h2>
+        <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
+          {playlists.data.map((playlist) => (
+            <Col key={playlist.id}>
+              <PlaylistCard playlist={playlist} />
+            </Col>
+          ))}
+        </Row>
+      </>
     );
   }
 

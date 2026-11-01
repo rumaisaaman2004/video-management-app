@@ -88,6 +88,7 @@ export function HistoryPage() {
 
       <PersonalVideoList
         videos={history}
+        heading={inProgress ? 'Videos in progress' : 'Watched videos'}
         page={page}
         onPageChange={(nextPage) => update({ page: nextPage })}
         renderActions={(video) => (

@@ -49,7 +49,7 @@ export function PlaylistVideoList({ videos, canEdit, isBusy, onMove, onRemove })
                 .filter(Boolean)
                 .join(' · ')}
               {video.viewer?.completed && (
-                <span className="text-success ms-2">
+                <span className="text-success-emphasis ms-2">
                   <i className="bi bi-check-circle-fill me-1" aria-hidden="true" />
                   Watched
                 </span>

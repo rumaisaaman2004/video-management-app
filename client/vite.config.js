@@ -24,5 +24,15 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/test/setup.js',
+    // The first test in each file also pays for the app's first render in a fresh worker
+    // (about 4s on a busy machine, more with coverage). A test that truly hangs still fails.
+    testTimeout: 10_000,
+    coverage: {
+      provider: 'v8',
+      include: ['src/**'],
+      // Test helpers and the entry file that only mounts the app are not product code.
+      exclude: ['src/test/**', 'src/main.jsx'],
+      reporter: ['text-summary', 'html'],
+    },
   },
 });

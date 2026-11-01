@@ -8,6 +8,7 @@ export function NotFoundPage() {
   return (
     <EmptyState
       icon="signpost-split"
+      titleAs="h1"
       title="Page not found"
       message="The page you are looking for does not exist or has moved."
       action={

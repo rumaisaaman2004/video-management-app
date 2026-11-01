@@ -36,7 +36,7 @@ export function FormField({
       <Form.Label htmlFor={id}>
         {label}
         {controlProps.required && (
-          <span className="text-danger" aria-hidden="true">
+          <span className="text-danger-emphasis" aria-hidden="true">
             {' '}
             *
           </span>

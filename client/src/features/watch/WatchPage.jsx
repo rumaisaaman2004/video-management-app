@@ -66,7 +66,12 @@ function VideoDetails({ video }) {
             {video.category && (
               <>
                 {' · '}
-                <Link to={`/?category=${video.category.slug}`}>{video.category.name}</Link>
+                <Link
+                  to={`/?category=${video.category.slug}`}
+                  className="text-decoration-underline"
+                >
+                  {video.category.name}
+                </Link>
               </>
             )}
           </div>
@@ -111,6 +116,7 @@ function WatchContent({ videoId }) {
     return (
       <EmptyState
         icon="film"
+        titleAs="h1"
         title="Video not found"
         message="It may have been removed, or the link is wrong."
         action={

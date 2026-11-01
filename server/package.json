@@ -12,7 +12,9 @@
     "test:watch": "vitest",
     "db:migrate": "node scripts/db.js migrate",
     "db:seed": "node scripts/db.js seed",
-    "db:reset": "node scripts/db.js reset"
+    "db:reset": "node scripts/db.js reset",
+    "seed:media": "node scripts/seed-media.js",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@vitest/coverage-v8": "5.0.5",
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.13.0",
