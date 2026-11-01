@@ -130,6 +130,8 @@ describe('GET /api/videos', () => {
       ['popular', ['Popular', 'Alpha', 'Zulu']],
       ['title', ['Alpha', 'Popular', 'Zulu']],
       ['oldest', ['Zulu', 'Popular', 'Alpha']],
+      ['least-viewed', ['Alpha', 'Zulu', 'Popular']],
+      ['title-desc', ['Zulu', 'Popular', 'Alpha']],
     ])('sorts by %s', async (sort, expected) => {
       await createVideo(pool, { uploaderId, title: 'Zulu', viewCount: 5, createdAt: daysAgo(3) });
       await createVideo(pool, {

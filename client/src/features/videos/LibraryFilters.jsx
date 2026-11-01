@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { FormField } from '../../components/ui/FormField.jsx';
-import { SearchBox } from './SearchBox.jsx';
+import { SearchBox } from '../../components/ui/SearchBox.jsx';
 
 const MAX_TAG_CHIPS = 12;
 
@@ -28,7 +28,11 @@ export function LibraryFilters({ params, sortOptions, categories, tags, onChange
     <div className="d-grid gap-3 mb-4">
       <Row className="g-3 align-items-end">
         <Col xs={12} lg>
-          <SearchBox value={params.q} onSearch={(q) => onChange({ q }, { replace: true })} />
+          <SearchBox
+            value={params.q}
+            placeholder="Search by title, description or tag"
+            onSearch={(q) => onChange({ q }, { replace: true })}
+          />
         </Col>
         <Col xs={12} sm={6} lg={3}>
           <FormField

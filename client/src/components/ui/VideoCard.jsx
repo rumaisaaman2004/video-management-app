@@ -1,14 +1,10 @@
-import Badge from 'react-bootstrap/Badge';
 import Card from 'react-bootstrap/Card';
 import Placeholder from 'react-bootstrap/Placeholder';
 import { Link } from 'react-router';
 import { formatDuration, formatRelativeDate, pluralize } from '../../lib/format.js';
+import { VIDEO_STATUSES } from '../../lib/videoStatus.js';
 import styles from './VideoCard.module.scss';
-
-const STATUS_BADGES = {
-  processing: { bg: 'warning', label: 'Processing' },
-  failed: { bg: 'danger', label: 'Failed' },
-};
+import { VideoStatusBadge, VisibilityBadge } from './VideoStatusBadge.jsx';
 
 function watchedPercent(video) {
   const progress = video.viewer?.progressSeconds ?? 0;
@@ -23,7 +19,8 @@ function watchedPercent(video) {
 export function VideoCard({ video, actions }) {
   const href = `/videos/${video.id}`;
   const percent = watchedPercent(video);
-  const statusBadge = STATUS_BADGES[video.status];
+  // "Ready" is the normal state, so only other statuses are called out.
+  const statusLabel = video.status !== 'ready' ? VIDEO_STATUSES[video.status]?.label : null;
 
   return (
     <Card className="h-100 border-0 bg-transparent">
@@ -39,13 +36,8 @@ export function VideoCard({ video, actions }) {
           )}
 
           <div className={styles.badges}>
-            {statusBadge && <Badge bg={statusBadge.bg}>{statusBadge.label}</Badge>}
-            {video.visibility === 'private' && (
-              <Badge bg="dark">
-                <i className="bi bi-lock-fill me-1" />
-                Private
-              </Badge>
-            )}
+            <VideoStatusBadge status={video.status} />
+            {video.visibility === 'private' && <VisibilityBadge visibility="private" />}
           </div>
 
           {video.durationSeconds != null && (
@@ -79,7 +71,7 @@ export function VideoCard({ video, actions }) {
         {/* The same information as the badges and progress bar, for screen readers. */}
         <span className="visually-hidden">
           {[
-            statusBadge?.label,
+            statusLabel,
             video.visibility === 'private' && 'Private',
             video.durationSeconds != null && `Length ${formatDuration(video.durationSeconds)}`,
             percent > 0 && `${percent}% watched`,

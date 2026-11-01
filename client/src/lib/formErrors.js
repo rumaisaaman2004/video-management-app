@@ -6,7 +6,8 @@
 export function fieldErrorsFromApiError(error) {
   const fieldErrors = {};
   for (const { field, message } of error?.details ?? []) {
-    const name = field.replace(/^body\./, '');
+    // "body.tags.3" (one item of a list) is shown on the "tags" field.
+    const name = field.replace(/^body\./, '').split('.')[0];
     fieldErrors[name] ??= message;
   }
   return fieldErrors;

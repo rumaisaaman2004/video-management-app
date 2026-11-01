@@ -8,7 +8,10 @@ import { ColorModeToggle } from './ColorModeToggle.jsx';
 import { UserMenu } from './UserMenu.jsx';
 
 // `requiresAuth` / `adminOnly` hide links the visitor cannot use.
-const NAV_LINKS = [{ to: '/', label: 'Library', icon: 'collection-play' }];
+const NAV_LINKS = [
+  { to: '/', label: 'Library', icon: 'collection-play' },
+  { to: '/admin/videos', label: 'Manage videos', icon: 'sliders', adminOnly: true },
+];
 
 /** Top navigation; collapses into a menu button on small screens. */
 export function AppNavbar() {
@@ -29,7 +32,8 @@ export function AppNavbar() {
           <Nav className="me-auto" as="ul">
             {visibleLinks.map((link) => (
               <Nav.Item as="li" key={link.to}>
-                <Nav.Link as={NavLink} to={link.to} eventKey={link.to} end>
+                {/* The library link is active only on "/"; others also on their sub-pages. */}
+                <Nav.Link as={NavLink} to={link.to} eventKey={link.to} end={link.to === '/'}>
                   <i className={`bi bi-${link.icon} me-1`} aria-hidden="true" />
                   {link.label}
                 </Nav.Link>

@@ -26,7 +26,9 @@ const SORT_ORDERS = {
   newest: 'v.created_at DESC, v.id',
   oldest: 'v.created_at ASC, v.id',
   popular: 'v.view_count DESC, v.created_at DESC, v.id',
+  'least-viewed': 'v.view_count ASC, v.created_at DESC, v.id',
   title: 'v.title ASC, v.id',
+  'title-desc': 'v.title DESC, v.id',
 };
 
 const UPDATABLE_COLUMNS = {

@@ -11,7 +11,15 @@ import { commaSeparatedTagsSchema, tagListSchema } from '../tags/tags.schemas.js
 
 const VISIBILITIES = ['public', 'private'];
 const STATUSES = ['processing', 'ready', 'failed'];
-export const SORT_OPTIONS = ['relevance', 'newest', 'oldest', 'popular', 'title'];
+export const SORT_OPTIONS = [
+  'relevance',
+  'newest',
+  'oldest',
+  'popular',
+  'least-viewed',
+  'title',
+  'title-desc',
+];
 
 const titleSchema = z.string().trim().min(1, 'Title is required').max(200);
 

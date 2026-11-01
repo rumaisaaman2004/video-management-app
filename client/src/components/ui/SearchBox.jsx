@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -10,7 +10,8 @@ const SEARCH_DELAY_MS = 300;
  * Searches as the user types (after a short pause) or immediately on Enter.
  * `value` is the active search from the URL; `onSearch` receives trimmed text.
  */
-export function SearchBox({ value, onSearch }) {
+export function SearchBox({ value, onSearch, label = 'Search videos', placeholder }) {
+  const inputId = useId();
   const [text, setText] = useState(value);
   const [shownValue, setShownValue] = useState(value);
   const debouncedSearch = useDebouncedCallback(onSearch, SEARCH_DELAY_MS);
@@ -41,17 +42,17 @@ export function SearchBox({ value, onSearch }) {
 
   return (
     <Form role="search" onSubmit={handleSubmit}>
-      <Form.Label htmlFor="library-search" className="visually-hidden">
-        Search videos
+      <Form.Label htmlFor={inputId} className="visually-hidden">
+        {label}
       </Form.Label>
       <InputGroup>
         <InputGroup.Text aria-hidden="true">
           <i className="bi bi-search" />
         </InputGroup.Text>
         <Form.Control
-          id="library-search"
+          id={inputId}
           type="search"
-          placeholder="Search by title, description or tag"
+          placeholder={placeholder}
           autoComplete="off"
           maxLength={200}
           value={text}

@@ -20,5 +20,8 @@
   "devDependencies": {
     "concurrently": "^10.0.6",
     "prettier": "^3.9.10"
+  },
+  "overrides": {
+    "video.js": "8.24.1"
   }
 }
