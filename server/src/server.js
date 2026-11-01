@@ -3,11 +3,21 @@ import { env } from './config/env.js';
 import { createContainer } from './container.js';
 import { pool } from './db/pool.js';
 import { logger } from './lib/logger.js';
+import { findStartupProblems } from './startupChecks.js';
 
 // Upper bound for in-flight requests to finish before the process is forced to exit.
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 // Upper bound for receiving one request; large video uploads on slow connections need time.
 const REQUEST_TIMEOUT_MS = 30 * 60 * 1000;
+
+// Report missing pieces (database, migrations, FFmpeg) up front with how to fix them,
+// instead of as confusing errors on the first request that needs them.
+const problems = await findStartupProblems({
+  pool,
+  ffmpegPath: env.FFMPEG_PATH,
+  ffprobePath: env.FFPROBE_PATH,
+});
+problems.forEach((problem) => logger.error(problem));
 
 const container = createContainer({ pool });
 const app = createApp(container);
